@@ -1,6 +1,7 @@
 import os
 import time
 from pathlib import Path
+
 from dotenv import load_dotenv
 from tqdm.auto import tqdm
 from pinecone import Pinecone, ServerlessSpec
@@ -37,17 +38,9 @@ def get_pinecone_index():
 
 # load,split,embed and upsert pdf docs content
 
-def load_vectorstore(uploaded_files):
+def load_vectorstore(file_paths):
     embed_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
     index = get_pinecone_index()
-    file_paths = []
-
-    for file in uploaded_files:
-        save_path = Path(UPLOAD_DIR) / file.filename
-        with open(save_path, "wb") as f:
-            f.write(file.file.read())
-        file_paths.append(str(save_path))
-
     for file_path in file_paths:
         loader = PyPDFLoader(file_path)
         documents = loader.load()
