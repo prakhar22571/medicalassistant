@@ -1,6 +1,6 @@
 import logging
 
-def setup_logger(name="MedicalAssistant"):
+def setup_logger(name="medicalassistant"):
     logger=logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
 

@@ -1,7 +1,6 @@
 # 📅 AI Medical Assistant Chatbot — RAG-based Application
 
-
-> 🗂️ **Architecture PDF:** [View Architecture](./assets/MedicalAssistant.pdf)
+> 🗂️ **Architecture PDF:** [View Architecture](./assets/medicalassistant.pdf)
 
 ---
 
@@ -31,7 +30,7 @@ Retrieved Docs
 LLM-generated Answer
 ```
 
-For a detailed view, refer to the **[MedicalAssistant.pdf](./assets/MedicalAssistant.pdf)**
+For a detailed view, refer to the **[medicalassistant.pdf](./assets/medicalassistant.pdf)**
 
 ---
 
@@ -75,7 +74,7 @@ POST /ask/ --- Ask a question --- Form field: `question`
 ```
 └── 📁assets
     ├── DIABETES.pdf
-    ├── MedicalAssistant.pdf
+    ├── medicalassistant.pdf
 ```
 
 ```
