@@ -1,11 +1,7 @@
 from fastapi import APIRouter, Form
 from fastapi.responses import JSONResponse
-from modules.llm import get_llm_chain
-from modules.query_handlers import query_chain
 from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from pinecone import Pinecone
 from pydantic import Field
 from typing import List, Optional
 from logger import logger
@@ -17,6 +13,11 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "medicalindex")
 @router.post("/ask/")
 async def ask_question(question: str = Form(...)):
     try:
+        from pinecone import Pinecone
+        from langchain_community.embeddings import HuggingFaceEmbeddings
+        from modules.llm import get_llm_chain
+        from modules.query_handlers import query_chain
+
         logger.info(f"user query: {question}")
 
         # Embed model + Pinecone setup

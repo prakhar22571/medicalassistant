@@ -4,10 +4,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from tqdm.auto import tqdm
-from pinecone import Pinecone, ServerlessSpec
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
 
 load_dotenv()
 
@@ -20,6 +16,8 @@ os.makedirs(UPLOAD_DIR,exist_ok=True)
 
 
 def get_pinecone_index():
+    from pinecone import Pinecone, ServerlessSpec
+
     pc = Pinecone(api_key=PINECONE_API_KEY)
     spec = ServerlessSpec(cloud="aws",region=PINECONE_ENV)
     existing_indexes = [i["name"] for i in pc.list_indexes()]
@@ -39,6 +37,10 @@ def get_pinecone_index():
 # load,split,embed and upsert pdf docs content
 
 def load_vectorstore(file_paths):
+    from langchain_community.document_loaders import PyPDFLoader
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+
     embed_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
     index = get_pinecone_index()
     for file_path in file_paths:
