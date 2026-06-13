@@ -28,7 +28,7 @@ async def ask_question(question: str = Form(...)):
 
         docs = [
             Document(
-                page_content=match["metadata"].get("text", ""),
+                page_content=match["metadata"].get("text", match.get("id", "")),
                 metadata=match["metadata"]
             ) for match in res["matches"]
         ]
