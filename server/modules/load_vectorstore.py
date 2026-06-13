@@ -18,29 +18,28 @@ UPLOAD_DIR="./uploaded_docs"
 os.makedirs(UPLOAD_DIR,exist_ok=True)
 
 
-# initialize pinecone instance
-pc=Pinecone(api_key=PINECONE_API_KEY)
-spec=ServerlessSpec(cloud="aws",region=PINECONE_ENV)
-existing_indexes=[i["name"] for i in pc.list_indexes()]
+def get_pinecone_index():
+    pc = Pinecone(api_key=PINECONE_API_KEY)
+    spec = ServerlessSpec(cloud="aws",region=PINECONE_ENV)
+    existing_indexes = [i["name"] for i in pc.list_indexes()]
 
+    if PINECONE_INDEX_NAME not in existing_indexes:
+        pc.create_index(
+            name=PINECONE_INDEX_NAME,
+            dimension=768,
+            metric="dotproduct",
+            spec=spec
+        )
+        while not pc.describe_index(PINECONE_INDEX_NAME).status["ready"]:
+            time.sleep(1)
 
-if PINECONE_INDEX_NAME not in existing_indexes:
-    pc.create_index(
-        name=PINECONE_INDEX_NAME,
-        dimension=768,
-        metric="dotproduct",
-        spec=spec
-    )
-    while not pc.describe_index(PINECONE_INDEX_NAME).status["ready"]:
-        time.sleep(1)
-
-
-index=pc.Index(PINECONE_INDEX_NAME)
+    return pc.Index(PINECONE_INDEX_NAME)
 
 # load,split,embed and upsert pdf docs content
 
 def load_vectorstore(uploaded_files):
     embed_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+    index = get_pinecone_index()
     file_paths = []
 
     for file in uploaded_files:
